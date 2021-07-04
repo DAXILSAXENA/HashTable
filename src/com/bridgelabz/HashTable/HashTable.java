@@ -16,6 +16,13 @@ public class HashTable {
 				value = value + 1;
 			hashImpl.add(word, value);
 		}
+		//Display the hashtable
+        System.out.println(hashImpl);
+
+        //Remove "avoidable" from the hashtable
+        hashImpl.remove("avoidable");
+
+		// Display the hashtable
 		System.out.println(hashImpl);
 	}
 }
