@@ -1,11 +1,29 @@
 package com.bridgelabz.HashTable;
 
+import java.util.ArrayList;
+
 public class LinkedList<K, V> {
 	MyMapNode head;
 	MyMapNode tail;
 
+	private final int numOfBuckets;
+	ArrayList<MyMapNode<K, V>> myBucketArray;
+
+	public LinkedList() {
+		this.numOfBuckets = 20;
+		this.myBucketArray = new ArrayList<>();
+		for (int i = 0; i < numOfBuckets; i++)
+			this.myBucketArray.add(null);
+	}
+
 	public void add(K key, V value) {
-		MyMapNode<K, V> myNode = (MyMapNode<K, V>) searchNode(key);
+		int index = this.getBucketIndex(key);
+		MyMapNode<K, V> myNode = this.myBucketArray.get(index);
+		if (myNode == null) {
+			myNode = new MyMapNode<>(key, value);
+			this.myBucketArray.set(index, myNode);
+		}
+		myNode = (MyMapNode<K, V>) searchNode(key);
 		if (myNode == null) {
 			myNode = new MyMapNode<>(key, value);
 			this.append(myNode);
@@ -39,8 +57,17 @@ public class LinkedList<K, V> {
 	}
 
 	public V get(K word) {
+		int index = this.getBucketIndex(word);
+		if (this.myBucketArray.get(index) == null)
+			return null;
 		MyMapNode<K, V> myMapNode = searchNode(word);
 		return (myMapNode == null) ? null : myMapNode.getValue();
+	}
+
+	private int getBucketIndex(K word) {
+		int hashCode = Math.abs(word.hashCode());
+		int index = hashCode % numOfBuckets;
+		return index;
 	}
 
 	@Override
